@@ -8,8 +8,10 @@
 namespace XNet
 {
 
-typedef uint32_t MessageID;
+typedef uint16_t MessageID;
 typedef unsigned long ConnectionID;
+
+const ConnectionID NOBODY = 0;
 
 class Peer;
 
@@ -22,7 +24,7 @@ public:
 	std::string data;
 	bool reliable, ordered;
 
-	Message(MessageID mid, const std::string& payload = "", bool isReliable = true, bool isOrdered = true)
+	Message(MessageID mid = 0, const std::string& payload = "", bool isReliable = true, bool isOrdered = true)
 	: id(mid),
 	  data(payload),
 	  reliable(isReliable),
@@ -72,52 +74,79 @@ public:
 			metadata = new std::map<std::string, std::string>();
 		metadata->insert(std::make_pair(key, value));
 	}
+
+	void CopyMetadata(const Message& source)
+	{
+		ordered = source.ordered;
+		reliable = source.reliable;
+		if (metadata)
+			delete metadata;
+		if (source.metadata)
+			metadata = new std::map<std::string, std::string>(*(source.metadata));
+		else
+			metadata = 0;
+	}
+
+	void* Encode(size_t& length) const;
+	static Message Decode(const void* data, size_t length);
 };
 
 class Plugin
 {
 private:
 	friend class Peer;
-	Plugin* next;
+	Plugin* lower;
+	Plugin* higher;
+	Peer* peer;
+protected:
+	Plugin* NextLower() const;
+	Plugin* NextHigher() const;
 public:
 	Plugin();
 	virtual ~Plugin() = 0;
 
-	virtual void DidConnect(Peer* peer, ConnectionID connectionID, const std::string& hostname, uint16_t port) {}
-	virtual void DidDisconnect(Peer* peer, ConnectionID connectionID, bool started) {}
-	virtual bool DidReceiveMessage(Peer* peer, ConnectionID connectionID, const Message& message) {return false;}
-	virtual bool AuditConnection(Peer* peer, const std::string& hostname, uint16_t port) {return true;}
-	virtual bool AuditIncomingMessage(Peer* peer, ConnectionID connectionID, const Message& message) {return true;}
-	virtual bool AuditOutgoingMessage(Peer* peer, ConnectionID connectionID, const Message& message) {return true;}
+	Peer* AttachedPeer() const { return peer; }
 
-	Plugin* NextPlugin() { return next; }
+	// called on all plugins
+	virtual void Update(unsigned long dt);
+	// called on all plugins
+	virtual void DidAttach();
+	// called on all plugins
+	virtual void DidDetach();
+	// lower->higher
+	virtual void DidConnect(ConnectionID connectionID, const std::string& hostname, uint16_t port);
+	// lower->higher
+	virtual void DidDisconnect(ConnectionID connectionID, bool started);
+	// lower->higher
+	virtual void DidReceiveMessage(ConnectionID connectionID, const Message& message);
+	// called on all plugins
+	virtual bool AuditConnection(const std::string& hostname, uint16_t port);
+	// higher->lower
+	virtual bool AuditOutgoingMessage(ConnectionID connectionID, const Message& message);
 };
 
 class Peer
 {
 private:
 public:
-	typedef unsigned long ConnectionID;
-	typedef uint32_t MessageID;
-	const static ConnectionID NOBODY = 0;
-	const static ConnectionID EVERYBODY = -1;
-
 	Peer();
 	~Peer();
 
+	void Update(unsigned long dt);
 	void BeginListening(uint16_t port);
 	void EndListening();
 	std::string GetPassword() const;
 	void SetPassword(const std::string& pw);
-	void Connect(const std::string& remote, uint16_t port, const std::string& password);
-	void Disconnect(ConnectionID connection = EVERYBODY);
-	void KillConnection(ConnectionID connection = EVERYBODY);
+	void Connect(const std::string& remote, uint16_t port);
+	void Disconnect(ConnectionID connection);
 	void SendMessage(const Message& message,
-	                 ConnectionID target = EVERYBODY);
-	Plugin* FirstPlugin();
-	void AttachPlugin(Plugin* plugin);
+	                 ConnectionID target,
+	                 Plugin* source = NULL);
+	Plugin* HighestPlugin();
+	Plugin* LowestPlugin();
+	void AttachPlugin(Plugin* plugin, Plugin* lowerThan = NULL);
 	void DetachPlugin(Plugin* plugin);
-	void ReceiveMessage(ConnectionID source, const Message& message);
+	void ReceiveMessage(ConnectionID source, const Message& message, Plugin* plugin = NULL);
 };
 
 }

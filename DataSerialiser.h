@@ -12,14 +12,20 @@ class DataSerialiser
 {
 private:
 	std::vector<uint32_t> words;
-	uint32_t currentWord;
+	uint32_t currentWord, index;
 public:
 	DataSerialiser();
 
 	void PutWord(uint32_t value, int significantBits);
 
-	void Sync();
-	std::string StringValue();
+	void Sync()
+		{ words.push_back(currentWord);
+		  currentWord = index = 0; }
+	const void* DataValue(size_t& length) const;
+	std::string StringValue() const
+		{ size_t len;
+		  const char* bytes = (const char*)DataValue(len);
+		  return std::string(bytes, len); }
 
 	DataSerialiser& operator<<(bool value)
 		{ PutWord(value ? 1 : 0, 1); return *this; }
