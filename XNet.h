@@ -116,7 +116,7 @@ public:
 	// lower->higher
 	virtual void DidConnect(ConnectionID connectionID, const std::string& hostname, uint16_t port);
 	// lower->higher
-	virtual void DidDisconnect(ConnectionID connectionID, bool started);
+	virtual void DidDisconnect(ConnectionID connectionID);
 	// lower->higher
 	virtual void DidReceiveMessage(ConnectionID connectionID, const Message& message);
 	// called on all plugins
