@@ -28,10 +28,10 @@ void Plugin::DidConnect(ConnectionID connectionID, const std::string& hostname, 
 		higher->DidConnect(connectionID, hostname, port);
 }
 
-void Plugin::DidDisconnect(ConnectionID connectionID, bool initiated)
+void Plugin::DidDisconnect(ConnectionID connectionID)
 {
 	if (higher)
-		higher->DidDisconnect(connectionID, initiated);
+		higher->DidDisconnect(connectionID);
 }
 
 void Plugin::DidReceiveMessage(ConnectionID connectionID, const Message& message)

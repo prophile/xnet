@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include "SocketProvider.h"
 #include <inttypes.h>
 
 namespace XNet
@@ -128,8 +129,11 @@ public:
 class Peer
 {
 private:
+	Plugin* highestPlugin;
+	Plugin* lowestPlugin;
+	SocketProvider* socketProvider;
 public:
-	Peer();
+	Peer(SocketProvider* provider);
 	~Peer();
 
 	void Update(unsigned long dt);
@@ -142,8 +146,8 @@ public:
 	void SendMessage(const Message& message,
 	                 ConnectionID target,
 	                 Plugin* source = NULL);
-	Plugin* HighestPlugin();
-	Plugin* LowestPlugin();
+	Plugin* HighestPlugin() const { return highestPlugin; }
+	Plugin* LowestPlugin() const { return lowestPlugin; }
 	void AttachPlugin(Plugin* plugin, Plugin* lowerThan = NULL);
 	void DetachPlugin(Plugin* plugin);
 	void ReceiveMessage(ConnectionID source, const Message& message, Plugin* plugin = NULL);
