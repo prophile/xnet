@@ -40,7 +40,7 @@ void DataSerialiser::PutWord(uint32_t value, int sigbits)
 		if (index == 32)
 		{
 			index = 0;
-			words.push_back(currentWord);
+			words.push_back(Big32(currentWord));
 			currentWord = 0;
 		}
 	}

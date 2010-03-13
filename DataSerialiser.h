@@ -11,6 +11,19 @@ namespace XNet
 class DataSerialiser
 {
 private:
+#if defined(__LITTLE_ENDIAN__) && defined(__clang__)
+	static uint32_t Big32(uint32_t x)
+		{ return __builtin_bswap32(x); }
+#elif defined(__LITTLE_ENDIAN__)
+	static uint32_t Big32(uint32_t x)
+		{ return ((x << 24) & 0xFF000000) |
+		         ((x << 16) & 0x00FF0000) |
+		         ((x << 8)  & 0x0000FF00) |
+		         ((x << 0)  & 0x000000FF); }
+#else
+	static uint32_t Big32(uint32_t x)
+		{ return x; }
+#endif
 	std::vector<uint32_t> words;
 	uint32_t currentWord, index;
 public:
@@ -19,7 +32,7 @@ public:
 	void PutWord(uint32_t value, int significantBits);
 
 	void Sync()
-		{ words.push_back(currentWord);
+		{ words.push_back(Big32(currentWord));
 		  currentWord = index = 0; }
 	const void* DataValue(size_t& length) const;
 	std::string StringValue() const
