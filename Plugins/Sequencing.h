@@ -1,5 +1,5 @@
-#ifndef __XNET_ORDERING__
-#define __XNET_ORDERING__
+#ifndef __XNET_SEQUENCING__
+#define __XNET_SEQUENCING__
 
 #include "XNet.h"
 #include <inttypes.h>
@@ -11,7 +11,7 @@ namespace XNet
 namespace Plugins
 {
 
-class Ordering : public Plugin
+class Sequencing : public Plugin
 {
 private:
 	std::map<ConnectionID, uint32_t> maxReceivedID;

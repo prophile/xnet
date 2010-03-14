@@ -1,4 +1,4 @@
-#include "Ordering.h"
+#include "Sequencing.h"
 #include "MessageIDs.h"
 #include "DataSerialiser.h"
 #include "DataUnserialiser.h"
@@ -9,7 +9,7 @@ namespace XNet
 namespace Plugins
 {
 
-void Ordering::DidDisconnect(ConnectionID connection)
+void Sequencing::DidDisconnect(ConnectionID connection)
 {
 	std::map<ConnectionID, uint32_t>::iterator iter;
 	iter = maxReceivedID.find(connection);
@@ -20,7 +20,7 @@ void Ordering::DidDisconnect(ConnectionID connection)
 		nextSendID.erase(iter);
 }
 
-void Ordering::DidReceiveMessage(ConnectionID connection, const Message& message)
+void Sequencing::DidReceiveMessage(ConnectionID connection, const Message& message)
 {
 	if (message.id == MID_SEQ)
 	{
@@ -54,7 +54,7 @@ void Ordering::DidReceiveMessage(ConnectionID connection, const Message& message
 	}
 }
 
-bool Ordering::AuditOutgoingMessage(ConnectionID connection, const Message& message)
+bool Sequencing::AuditOutgoingMessage(ConnectionID connection, const Message& message)
 {
 	if (!message.ordered)
 	{

@@ -3,7 +3,7 @@ CFLAGS=-Os -IPlugins -I. -ISystem
 
 all: libxnet.a
 
-libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Ordering.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o
+libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o
 	ar -c -q -s $@ $^
 
 System/SocketProvider.o: System/SocketProvider.cpp System/SocketProvider.h
@@ -24,7 +24,7 @@ Message.o: Message.cpp XNet.h DataUnserialiser.h DataSerialiser.h System/SocketP
 Plugin.o: Plugin.cpp XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-Plugins/Ordering.o: Plugins/Ordering.cpp Plugins/Ordering.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
+Plugins/Sequencing.o: Plugins/Sequencing.cpp Plugins/Sequencing.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 Plugins/Reliability.o: Plugins/Reliability.cpp Plugins/Reliability.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
