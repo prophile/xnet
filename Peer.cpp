@@ -42,7 +42,7 @@ void Peer::Update(unsigned long dt)
 	// TODO: check connections
 }
 
-void Peer::Connection(const std::string& remote, uint16_t port)
+void Peer::Connect(const std::string& remote, uint16_t port)
 {
 	// TODO
 }
