@@ -27,6 +27,7 @@ public:
 	// bindPort is provided in network byte order
 	virtual Socket* NewSocket(uint16_t bindPort) = 0;
 	virtual uint32_t ResolveHost(const std::string& hostname) = 0;
+	virtual std::string ReverseLookup(uint32_t host) = 0;
 };
 
 }

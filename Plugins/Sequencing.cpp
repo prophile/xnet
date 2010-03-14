@@ -18,6 +18,7 @@ void Sequencing::DidDisconnect(ConnectionID connection)
 	iter = nextSendID.find(connection);
 	if (iter != nextSendID.end())
 		nextSendID.erase(iter);
+	Plugin::DidDisconnect(connection);
 }
 
 void Sequencing::DidReceiveMessage(ConnectionID connection, const Message& message)

@@ -132,15 +132,15 @@ private:
 	Plugin* highestPlugin;
 	Plugin* lowestPlugin;
 	SocketProvider* socketProvider;
+	Socket* primarySocket;
+	bool acceptNewConnections;
 public:
-	Peer(SocketProvider* provider);
+	Peer(SocketProvider* provider, uint16_t port);
 	~Peer();
 
 	void Update(unsigned long dt);
-	void BeginListening(uint16_t port);
-	void EndListening();
-	std::string GetPassword() const;
-	void SetPassword(const std::string& pw);
+	void BeginListening() { acceptNewConnections = true; }
+	void EndListening() { acceptNewConnections = false; }
 	void Connect(const std::string& remote, uint16_t port);
 	void Disconnect(ConnectionID connection);
 	void SendMessage(const Message& message,

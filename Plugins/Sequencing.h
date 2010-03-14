@@ -17,7 +17,7 @@ private:
 	std::map<ConnectionID, uint32_t> maxReceivedID;
 	std::map<ConnectionID, uint32_t> nextSendID;
 public:
-	Ordering() {}
+	Sequencing() {}
 
 	virtual void DidDisconnect(ConnectionID);
 	virtual void DidReceiveMessage(ConnectionID, const Message& message);
