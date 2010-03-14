@@ -2,6 +2,7 @@
 #define __XNET_DATA_UNSERIALISER__
 
 #include <vector>
+#include <inttypes.h>
 
 namespace XNet
 {
