@@ -23,13 +23,14 @@ private:
 public:
 	MessageID id;
 	std::string data;
-	bool reliable, ordered;
+	bool reliable, ordered, sequenced;
 
-	Message(MessageID mid = 0, const std::string& payload = "", bool isReliable = true, bool isOrdered = true)
+	Message(MessageID mid = 0, const std::string& payload = "", bool isReliable = true, bool isOrdered = true, bool isSequenced = false)
 	: id(mid),
 	  data(payload),
 	  reliable(isReliable),
 	  ordered(isOrdered),
+	  sequenced(isSequenced)
 	  metadata(0)
 	{
 	}
@@ -38,7 +39,8 @@ public:
 	: id(om.id),
 	  data(om.data),
 	  reliable(om.reliable),
-	  ordered(om.ordered)
+	  ordered(om.ordered),
+	  sequenced(om.sequenced)
 	{
 		if (om.metadata)
 		{
@@ -80,6 +82,7 @@ public:
 	{
 		ordered = source.ordered;
 		reliable = source.reliable;
+		sequenced = source.sequenced;
 		if (metadata)
 			delete metadata;
 		if (source.metadata)

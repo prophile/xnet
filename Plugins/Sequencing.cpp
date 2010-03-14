@@ -57,14 +57,13 @@ void Sequencing::DidReceiveMessage(ConnectionID connection, const Message& messa
 
 bool Sequencing::AuditOutgoingMessage(ConnectionID connection, const Message& message)
 {
-	if (!message.ordered)
+	if (!message.sequenced)
 	{
 		// non-ordered, not our problem
 		return Plugin::AuditOutgoingMessage(connection, message);
 	}
 	else
 	{
-		
 		uint32_t sequenceID;
 		std::map<ConnectionID, uint32_t>::iterator iter;
 		// next order sequence
