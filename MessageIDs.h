@@ -20,6 +20,7 @@ const MessageID MID_SERVER_REJECT          = 0x000B;
 const MessageID MID_CLIENT_PASSWORD        = 0x000C;
 const MessageID MID_SERVER_PASSWORD_ACCEPT = 0x000D;
 const MessageID MID_SERVER_PASSWORD_REJECT = 0x000E;
+const MessageID MID_ORD                    = 0x000F;
 
 }
 

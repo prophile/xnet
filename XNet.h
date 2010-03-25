@@ -30,7 +30,7 @@ public:
 	  data(payload),
 	  reliable(isReliable),
 	  ordered(isOrdered),
-	  sequenced(isSequenced)
+	  sequenced(isSequenced),
 	  metadata(0)
 	{
 	}
