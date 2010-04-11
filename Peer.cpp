@@ -1,4 +1,5 @@
 #include "XNet.h"
+#include <assert.h>
 
 namespace XNet
 {
@@ -59,7 +60,38 @@ void Peer::SendMessage(const Message& message, ConnectionID target, Plugin* sour
 
 void Peer::AttachPlugin(Plugin* plugin, Plugin* lowerThan)
 {
-	// TODO
+	if (!highestPlugin)
+	{
+		highestPlugin = lowestPlugin = plugin;
+		plugin->lower = plugin->higher = NULL;
+	}
+	if (lowerThan)
+	{
+		Plugin* p = highestPlugin;
+		while (p && p != lowerThan)
+		{
+			 p = p->lower;
+		}
+		assert(p);
+		if (p->lower)
+		{
+			p->lower->higher = plugin;
+		}
+		else
+		{
+			lowestPlugin = plugin;
+		}
+		p->lower = plugin;
+		plugin->lower = NULL;
+		plugin->higher = p;
+	}
+	else
+	{
+		highestPlugin->higher = plugin;
+		plugin->lower = highestPlugin;
+		plugin->higher = NULL;
+		highestPlugin = plugin;
+	}
 }
 
 void Peer::DetachPlugin(Plugin* plugin)
