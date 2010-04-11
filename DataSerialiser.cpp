@@ -3,6 +3,11 @@
 namespace XNet
 {
 
+DataSerialiser::DataSerialiser()
+: currentWord(0), index(0)
+{
+}
+
 const void* DataSerialiser::DataValue(size_t& length) const
 {
 	length = words.size() * 4;

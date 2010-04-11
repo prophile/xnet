@@ -8,10 +8,10 @@
 #include "System/SocketProvider.h"
 #include "System/LocalOnly.h"
 
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 
-#define ASSERT(cond, message) if (!(cond)) { fprintf(stdout, "Test failed: %s\n\t%s\n\t%s: line %d\n", (message), __PRETTY_FUNCTION__, __FILE__, __LINE__); abort(); }
+#define ASSERT(cond, message) if (!(cond)) { std::cerr << "Test failed: " << message << "\n\t" << __PRETTY_FUNCTION__ << "\n\t" << __FILE__ << ": line " << __LINE__ << std::endl; exit(1); }
 #define ASSERT_TRUE(cond, message) ASSERT((cond), (message))
 #define ASSERT_FALSE(cond, message) ASSERT(!(cond), message)
 #define ASSERT_EQUAL(a, b, message) ASSERT((a) == (b), message)

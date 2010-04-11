@@ -33,7 +33,7 @@ void LocalOnlySocket::Send(uint32_t host, uint16_t port, const void* data, size_
 	std::map<uint16_t, LocalOnlySocket*>::iterator iter = portMappings.find(port);
 	if (iter == portMappings.end())
 		return;
-	iter->second->queuedMessages.push(std::make_pair(port, std::string((const char*)data, length)));
+	iter->second->queuedMessages.push(std::make_pair(localPort, std::string((const char*)data, length)));
 }
 
 void* LocalOnlySocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
@@ -55,6 +55,46 @@ void* LocalOnlySocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
 		void* buffer = malloc(length);
 		memcpy(buffer, message.second.data(), length);
 		return buffer;
+	}
+}
+
+LocalOnlySocketProvider::LocalOnlySocketProvider()
+{
+}
+
+LocalOnlySocketProvider::~LocalOnlySocketProvider()
+{
+}
+
+Socket* LocalOnlySocketProvider::NewSocket(uint16_t port)
+{
+	return new LocalOnlySocket(port);
+}
+
+uint32_t LocalOnlySocketProvider::ResolveHost(const std::string& hostname)
+{
+	if (hostname == "localhost" ||
+	    hostname == "127.0.0.1")
+		return LOCALHOST_IP;
+	else
+		return 0;
+}
+
+std::string LocalOnlySocketProvider::ReverseLookup(uint32_t host)
+{
+	if (host == LOCALHOST_IP)
+		return "localhost";
+	else
+	{
+		char buf[16];
+		union
+		{
+			char octets[4];
+			uint32_t val;
+		} bitcast;
+		bitcast.val = host;
+		sprintf(buf, "%d.%d.%d.%d", bitcast.octets[0], bitcast.octets[1], bitcast.octets[2], bitcast.octets[3]);
+		return std::string(buf);
 	}
 }
 

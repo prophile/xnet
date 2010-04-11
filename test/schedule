@@ -4,3 +4,5 @@ XFAIL harness/0001-harness-fail
 XFAIL harness/0002-harness-success-unexpected
 Basic:
 TEST basic/0000-basic
+Local Only Socket Provider:
+TEST local-socket/0000-send-receive
