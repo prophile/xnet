@@ -137,6 +137,8 @@ private:
 	SocketProvider* socketProvider;
 	Socket* primarySocket;
 	bool acceptNewConnections;
+	std::map<ConnectionID, std::pair<uint32_t, uint16_t> > connections;
+	ConnectionID nextConnectionID;
 public:
 	Peer(SocketProvider* provider, uint16_t port);
 	~Peer();
@@ -144,7 +146,7 @@ public:
 	void Update(unsigned long dt);
 	void BeginListening() { acceptNewConnections = true; }
 	void EndListening() { acceptNewConnections = false; }
-	void Connect(const std::string& remote, uint16_t port);
+	bool Connect(const std::string& remote, uint16_t port);
 	void Disconnect(ConnectionID connection);
 	void SendMessage(const Message& message,
 	                 ConnectionID target,
