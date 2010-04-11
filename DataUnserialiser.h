@@ -2,6 +2,7 @@
 #define __XNET_DATA_UNSERIALISER__
 
 #include <vector>
+#include <string>
 #include <inttypes.h>
 
 namespace XNet
@@ -24,13 +25,15 @@ private:
 		{ return x; }
 #endif
 	std::vector<uint32_t> words;
-	uint32_t currentWord, index;
+	uint32_t currentWord, bitIndex, nextWord;
+	void NextWord();
+	void Init(const void* data, size_t len);
 public:
 	DataUnserialiser(const void* data, size_t len);
 	DataUnserialiser(const std::string& data);
 
 	uint32_t GetWord(int significantBits);
-	void Sync();
+	void Sync() { NextWord(); }
 
 	DataUnserialiser& operator>>(bool& value)
 		{ value = GetWord(1) == 1; return *this; }
@@ -46,12 +49,24 @@ public:
 		{ value = GetWord(32); return *this; }
 	DataUnserialiser& operator>>(uint32_t& value)
 		{ value = GetWord(32); return *this; }
-	DataUnserialiser& operator>>(int64_t& value);
-	DataUnserialiser& operator>>(uint64_t& value)
-		{ return *this >> (int64_t&)value; }
+	DataUnserialiser& operator>>(uint64_t& value);
+	DataUnserialiser& operator>>(int64_t& value)
+		{ return *this >> (uint64_t&)value; }
 	DataUnserialiser& operator>>(std::string& value);
-	DataUnserialiser& operator>>(float& value);
-	DataUnserialiser& operator>>(double& value);
+	DataUnserialiser& operator>>(float& value)
+		{
+			union { float fval; uint32_t ival; } bitcast;
+			*this >> bitcast.ival;
+			value = bitcast.fval;
+			return *this;
+		}
+	DataUnserialiser& operator>>(double& value)
+		{
+			union { double fval; uint64_t ival; } bitcast;
+			*this >> bitcast.ival;
+			value = bitcast.fval;
+			return *this;
+		}
 };
 
 }
