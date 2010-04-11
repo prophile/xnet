@@ -177,7 +177,7 @@ void Peer::AttachPlugin(Plugin* plugin, Plugin* lowerThan)
 
 void Peer::DetachPlugin(Plugin* plugin)
 {
-	// TODO
+	assert(0 && !"DetachPlugin is not yet implemented!");
 }
 
 void Peer::ReceiveMessage(ConnectionID source, const Message& message, Plugin* plugin)
