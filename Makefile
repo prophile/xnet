@@ -1,6 +1,6 @@
 CXX=clang++
 INCLUDES=-IPlugins -I. -ISystem
-CXXFLAGS=-Wall -Wno-reorder -fno-rtti -fno-frame-pointer -Os $(INCLUDES)
+CXXFLAGS=-Wall -Wno-reorder -fno-rtti -Os $(INCLUDES)
 
 all: libxnet.a
 
