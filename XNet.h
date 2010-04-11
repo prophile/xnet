@@ -123,7 +123,7 @@ public:
 	virtual void DidDisconnect(ConnectionID connectionID);
 	// lower->higher
 	virtual void DidReceiveMessage(ConnectionID connectionID, const Message& message);
-	// called on all plugins
+	// higher->lower
 	virtual bool AuditConnection(const std::string& hostname, uint16_t port);
 	// higher->lower
 	virtual bool AuditOutgoingMessage(ConnectionID connectionID, const Message& message);

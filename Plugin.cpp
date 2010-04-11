@@ -42,7 +42,9 @@ void Plugin::DidReceiveMessage(ConnectionID connectionID, const Message& message
 
 bool Plugin::AuditConnection(const std::string& hostname, uint16_t port)
 {
-	return true;
+	if (lower)
+		return lower->AuditConnection(hostname, port);
+	return false;
 }
 
 bool Plugin::AuditOutgoingMessage(ConnectionID connectionID, const Message& message)
