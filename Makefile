@@ -4,11 +4,8 @@ CXXFLAGS=-Wall -Wno-reorder -fno-rtti -Os $(INCLUDES)
 
 all: libxnet.a
 
-libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o
+libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o System/SocketProvider.o System/LocalOnly.o
 	ar -c -q -s $@ $^
-
-System/SocketProvider.o: System/SocketProvider.cpp System/SocketProvider.h
-	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 Peer.o: Peer.cpp XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
@@ -41,6 +38,12 @@ Plugins/SimulateLag.o: Plugins/SimulateLag.cpp Plugins/SimulateLag.h XNet.h Data
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 Plugins/Splitting.o: Plugins/Splitting.cpp Plugins/Splitting.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+System/SocketProvider.o: System/SocketProvider.cpp System/SocketProvider.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+System/LocalOnly.o: System/LocalOnly.cpp System/LocalOnly.h System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 clean:

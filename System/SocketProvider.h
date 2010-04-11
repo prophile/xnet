@@ -1,6 +1,9 @@
 #ifndef __XNET_SYSTEM_SOCKET_PROVIDER__
 #define __XNET_SYSTEM_SOCKET_PROVIDER__
 
+#include <string>
+#include <inttypes.h>
+
 namespace XNet
 {
 
@@ -9,8 +12,9 @@ namespace XNet
 class Socket
 {
 private:
-public:
+protected:
 	Socket();
+public:
 	virtual ~Socket() = 0;
 
 	virtual void Send(uint32_t host, uint16_t port, const void* data, size_t length) = 0;
