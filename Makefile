@@ -4,7 +4,7 @@ CXXFLAGS=-Wall -Wno-reorder -fno-rtti -Os $(INCLUDES)
 
 all: libxnet.a
 
-libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o Plugins/Ordering.o
+libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o
 	ar -c -q -s $@ $^
 
 System/SocketProvider.o: System/SocketProvider.cpp System/SocketProvider.h
@@ -32,6 +32,9 @@ Plugins/Reliability.o: Plugins/Reliability.cpp Plugins/Reliability.h XNet.h Data
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 Plugins/Ordering.o: Plugins/Ordering.cpp Plugins/Ordering.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+Plugins/AllowingConnections.o: Plugins/AllowingConnections.cpp Plugins/AllowingConnections.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 Plugins/SimulateLag.o: Plugins/SimulateLag.cpp Plugins/SimulateLag.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
