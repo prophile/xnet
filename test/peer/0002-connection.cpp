@@ -24,11 +24,14 @@ public:
 
 	virtual void DidReceiveMessage(ConnectionID source, const Message& message)
 	{
-		if (message.id == MID_TEST_HARNESS_1)
+		if (message.id == MID_TEST_HARNESS_0)
 		{
+			fprintf(stderr, "GOT THE MESSAGE!\n");
 			ASSERT_EQUAL(message.data, "moof", "message data got garbled");
 			*flag = true;
+			return;
 		}
+		ASSERT_UNREACHABLE("got the wrong message: " << message.id);
 		Plugin::DidReceiveMessage(source, message);
 	}
 };
