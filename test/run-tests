@@ -21,13 +21,13 @@ foreach ($sched as $line)
 		$current_key = $matches[1];
 		continue;
 	}
-	if (!isset($schedule[$current_key]))
-		$schedule[$current_key] = array();
 	$parts = explode(' ', $line);
 	$type = array_shift($parts);
 	$test = implode(' ', $parts);
 	if (!fnmatch($pattern, $test))
 		continue;
+	if (!isset($schedule[$current_key]))
+		$schedule[$current_key] = array();
 	$schedule[$current_key][] = array($test, $type);
 }
 
@@ -38,7 +38,7 @@ $total_fixes  = 0;
 
 function compile($test)
 {
-	system("clang++ -o /tmp/test -I.. -I. -L.. -lxnet -fno-rtti $test.cpp 2>/tmp/test-error.out", $rv);
+	system("g++ -o /tmp/test -I.. -I. -L.. -lxnet -fno-rtti $test.cpp 2>/tmp/test-error.out", $rv);
 	return ($rv == 0) ? "/tmp/test" : false;
 }
 

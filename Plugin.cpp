@@ -10,6 +10,10 @@ Plugin::Plugin()
 {
 }
 
+Plugin::~Plugin()
+{
+}
+
 void Plugin::Update(unsigned long dt)
 {
 }

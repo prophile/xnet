@@ -10,6 +10,32 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+
+void handlesig(int sig)
+{
+	if (sig == 10)
+	{
+		fprintf(stderr, "Timed out.\n");
+	}
+	else
+	{
+		fprintf(stderr, "Got signal: %d\n", sig);
+	}
+	exit(1);
+}
+
+int test_main();
+
+int main()
+{
+	signal(SIGALRM, handlesig);
+	alarm(8);
+	return test_main();
+}
+
+#define main test_main
 
 #define ASSERT(cond, message) if (!(cond)) { std::cerr << "Test failed: " << message << "\n\t" << __PRETTY_FUNCTION__ << "\n\t" << __FILE__ << ": line " << __LINE__ << std::endl; exit(1); }
 #define ASSERT_TRUE(cond, message) ASSERT((cond), (message))

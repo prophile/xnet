@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "DataSerialiser.h"
 #include "DataUnserialiser.h"
+#include <stdio.h>
 
 namespace XNet
 {
@@ -41,6 +42,7 @@ void Peer::Update(unsigned long dt)
 	while (current)
 	{
 		current->Update(dt);
+		assert(current != current->lower);
 		current = current->lower;
 	}
 	// check connections
@@ -52,8 +54,10 @@ void Peer::Update(unsigned long dt)
 	{
 		if (!dataLength || !dataHost || !dataPort)
 		{
-			return;
+			continue;
 		}
+		fprintf(stderr, "got message\n");
+		bool found = false;
 		for (std::map<ConnectionID, std::pair<uint32_t, uint16_t> >::iterator iter = connections.begin(); iter != connections.end(); ++iter)
 		{
 			if (iter->second.first == dataHost &&
@@ -66,10 +70,19 @@ void Peer::Update(unsigned long dt)
 				unserialiser >> msg.data;
 				ReceiveMessage(iter->first, msg, NULL);
 				free(data);
+				found = true;
 				break;
 			}
 		}
+		if (found)
+			continue;
 		// new connection! excitement ensues
+		if (!acceptNewConnections)
+		{
+			// or not. DENIED!
+			free(data);
+			continue;
+		}
 		std::string hostname = socketProvider->ReverseLookup(dataHost);
 		uint16_t hostPort = BE16(dataPort);
 		// audit it
@@ -78,7 +91,7 @@ void Peer::Update(unsigned long dt)
 		{
 			// audit denied connection
 			free(data);
-			break;
+			continue;
 		}
 		// OK, we accept this connection, assign it an ID
 		ConnectionID id = nextConnectionID++;
@@ -98,17 +111,15 @@ void Peer::Update(unsigned long dt)
 
 bool Peer::Connect(const std::string& remote, uint16_t port)
 {
-	ConnectionID id = nextConnectionID++;
 	uint16_t netPort = BE16(port);
 	uint32_t ip = socketProvider->ResolveHost(remote);
-	if (!ip && !port)
+	if (!ip || !port)
 		return false;
+	ConnectionID id = nextConnectionID++;
 	connections[id] = std::make_pair(ip, netPort);
 	if (lowestPlugin)
-	{
 		lowestPlugin->DidConnect(id, remote, port);
-	}
-	return false;
+	return true;
 }
 
 void Peer::Disconnect(ConnectionID connection)
@@ -145,7 +156,7 @@ void Peer::AttachPlugin(Plugin* plugin, Plugin* lowerThan)
 		highestPlugin = lowestPlugin = plugin;
 		plugin->lower = plugin->higher = NULL;
 	}
-	if (lowerThan)
+	else if (lowerThan)
 	{
 		Plugin* p = highestPlugin;
 		while (p && p != lowerThan)

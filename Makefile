@@ -4,6 +4,9 @@ CXXFLAGS=-Wall -Wno-reorder -fomit-frame-pointer -fno-rtti -Os $(INCLUDES)
 
 all: libxnet.a
 
+check: libxnet.a
+	cd test ; ./run-tests
+
 libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o System/SocketProvider.o System/LocalOnly.o
 	ar -c -q -s $@ $^
 
