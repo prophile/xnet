@@ -10,7 +10,7 @@ namespace XNet
 {
 
 typedef uint16_t MessageID;
-typedef unsigned long ConnectionID;
+typedef unsigned int ConnectionID;
 
 const ConnectionID NOBODY = 0;
 

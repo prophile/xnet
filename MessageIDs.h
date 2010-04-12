@@ -6,6 +6,7 @@
 namespace XNet
 {
 
+const MessageID MID_NONE                   = 0x0000;
 const MessageID MID_SYN                    = 0x0001;
 const MessageID MID_ACK                    = 0x0002;
 const MessageID MID_SEQ                    = 0x0003;
@@ -21,6 +22,11 @@ const MessageID MID_CLIENT_PASSWORD        = 0x000C;
 const MessageID MID_SERVER_PASSWORD_ACCEPT = 0x000D;
 const MessageID MID_SERVER_PASSWORD_REJECT = 0x000E;
 const MessageID MID_ORD                    = 0x000F;
+
+const MessageID MID_TEST_HARNESS_0         = 0xFFFF;
+const MessageID MID_TEST_HARNESS_1         = 0xFFFE;
+const MessageID MID_TEST_HARNESS_2         = 0xFFFD;
+const MessageID MID_TEST_HARNESS_3         = 0xFFFC;
 
 }
 

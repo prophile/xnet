@@ -25,7 +25,7 @@ Peer::Peer(SocketProvider* provider, uint16_t port)
   socketProvider(provider),
   primarySocket(0),
   acceptNewConnections(false),
-  nextConnectionID(0)
+  nextConnectionID(1)
 {
 	primarySocket = socketProvider->NewSocket(BE16(port));
 }
@@ -95,6 +95,7 @@ void Peer::Update(unsigned long dt)
 		}
 		// OK, we accept this connection, assign it an ID
 		ConnectionID id = nextConnectionID++;
+		connections[id] = std::make_pair(dataHost, dataPort);
 		// inform plugins -
 		// we can assume the existence of plugins at this point
 		// since without them, the connection would have been automatically
@@ -119,6 +120,8 @@ bool Peer::Connect(const std::string& remote, uint16_t port)
 	connections[id] = std::make_pair(ip, netPort);
 	if (lowestPlugin)
 		lowestPlugin->DidConnect(id, remote, port);
+	Message firstMessage(0);
+	SendMessage(firstMessage, id, lowestPlugin);
 	return true;
 }
 
@@ -193,6 +196,8 @@ void Peer::DetachPlugin(Plugin* plugin)
 
 void Peer::ReceiveMessage(ConnectionID source, const Message& message, Plugin* plugin)
 {
+	if (message.id == 0)
+		return;
 	Plugin* receiver = plugin ? plugin->higher : lowestPlugin;
 	if (receiver)
 	{

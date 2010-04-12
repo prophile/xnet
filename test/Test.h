@@ -1,10 +1,12 @@
 #include "XNet.h"
+#include "MessageIDs.h"
 #include "Plugins/AllowingConnections.h"
 #include "Plugins/Ordering.h"
 #include "Plugins/Reliability.h"
 #include "Plugins/Sequencing.h"
 #include "Plugins/SimulateLag.h"
 #include "Plugins/Splitting.h"
+#include "Plugins/Logging.h"
 #include "System/SocketProvider.h"
 #include "System/LocalOnly.h"
 

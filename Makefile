@@ -7,8 +7,8 @@ all: libxnet.a
 check: libxnet.a
 	cd test ; ./run-tests
 
-libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o System/SocketProvider.o System/LocalOnly.o
-	ar -c -q -s $@ $^
+libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Logging.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o System/SocketProvider.o System/LocalOnly.o
+	rm -f $@ ; ar -c -q -s $@ $^
 
 Peer.o: Peer.cpp XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
@@ -38,6 +38,9 @@ Plugins/AllowingConnections.o: Plugins/AllowingConnections.cpp Plugins/AllowingC
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 Plugins/SimulateLag.o: Plugins/SimulateLag.cpp Plugins/SimulateLag.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+Plugins/Logging.o: Plugins/Logging.cpp Plugins/Logging.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 Plugins/Splitting.o: Plugins/Splitting.cpp Plugins/Splitting.h XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
