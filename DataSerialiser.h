@@ -5,6 +5,10 @@
 #include <string>
 #include <inttypes.h>
 
+#if defined(__LITTLE_ENDIAN__) && !defined(__clang__)
+#include <arpa/inet.h>
+#endif
+
 namespace XNet
 {
 
@@ -16,10 +20,7 @@ private:
 		{ return __builtin_bswap32(x); }
 #elif defined(__LITTLE_ENDIAN__)
 	static uint32_t Big32(uint32_t x)
-		{ return ((x << 24) & 0xFF000000) |
-		         ((x << 16) & 0x00FF0000) |
-		         ((x << 8)  & 0x0000FF00) |
-		         ((x << 0)  & 0x000000FF); }
+		{ return ntohl(x); }
 #else
 	static uint32_t Big32(uint32_t x)
 		{ return x; }
@@ -31,14 +32,9 @@ public:
 
 	void PutWord(uint32_t value, int significantBits);
 
-	void Sync()
-		{ words.push_back(Big32(currentWord));
-		  currentWord = index = 0; }
+	void Sync();
 	const void* DataValue(size_t& length) const;
-	std::string StringValue() const
-		{ size_t len;
-		  const char* bytes = (const char*)DataValue(len);
-		  return std::string(bytes, len); }
+	std::string StringValue() const;
 
 	DataSerialiser& operator<<(bool value)
 		{ PutWord(value ? 1 : 0, 1); return *this; }

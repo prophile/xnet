@@ -88,7 +88,15 @@ foreach ($schedule as $key => $subsched)
 		if (!$success)
 		{	
 			clearstatcache();
-			if (filesize("/tmp/test-error.out") > 0)
+			$size = filesize("/tmp/test-error.out");
+			if ($size > 2048)
+			{
+				// too big to just display
+				$filename = tempnam("/tmp", "stderr-");
+				rename("/tmp/test-error.out", $filename);
+				echo "OUTPUT TOO LARGE! See $filename\n";
+			}
+			else if ($size > 0)
 			{
 				echo "=== OUTPUT ===\n";
 				readfile("/tmp/test-error.out");

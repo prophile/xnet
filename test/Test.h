@@ -7,6 +7,8 @@
 #include "Plugins/SimulateLag.h"
 #include "Plugins/Splitting.h"
 #include "Plugins/Logging.h"
+#include "DataSerialiser.h"
+#include "DataUnserialiser.h"
 #include "System/SocketProvider.h"
 #include "System/LocalOnly.h"
 
@@ -30,10 +32,10 @@ void handlesig(int sig)
 
 int test_main();
 
-int main()
+int main(int argc, char** argv)
 {
 	signal(SIGALRM, handlesig);
-	alarm(8);
+	alarm(argc > 1 ? atoi(argv[1]) : 8);
 	return test_main();
 }
 

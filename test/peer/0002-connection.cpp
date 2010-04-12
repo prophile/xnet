@@ -77,6 +77,9 @@ int main()
 		peer1->Update(10);
 	}
 
+	ASSERT_TRUE(received0, "peer0 failed to receive message");
+	ASSERT_TRUE(received1, "peer1 failed to receive message");
+
 	std::cerr << "leaving update cycle" << std::endl;
 
 	delete peer1;

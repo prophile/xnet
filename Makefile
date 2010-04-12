@@ -1,6 +1,6 @@
 CXX=g++
 INCLUDES=-IPlugins -I. -ISystem
-CXXFLAGS=-Wall -Wno-reorder -fomit-frame-pointer -fno-rtti -Os $(INCLUDES)
+CXXFLAGS=-Wall -Wno-reorder -fomit-frame-pointer -fno-rtti -gfull $(INCLUDES)
 
 all: libxnet.a
 
@@ -53,4 +53,4 @@ System/LocalOnly.o: System/LocalOnly.cpp System/LocalOnly.h System/SocketProvide
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 clean:
-	rm -f *.o Plugins/*.o libxnet.a
+	rm -f *.o Plugins/*.o libxnet.a System/*.o
