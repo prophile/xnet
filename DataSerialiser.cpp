@@ -79,7 +79,10 @@ void DataSerialiser::PutWord(uint32_t value, int sigbits)
 	if (sigbits <= remaining)
 	{
 		index += sigbits;
-		currentWord <<= sigbits;
+		if (sigbits == 32)
+			currentWord = 0;
+		else
+			currentWord <<= sigbits;
 		currentWord |= MaskToLowOrder(value, sigbits);
 		if (index == 32)
 		{
