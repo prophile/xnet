@@ -92,12 +92,12 @@ DataUnserialiser::DataUnserialiser(const std::string& data)
 
 DataUnserialiser& DataUnserialiser::operator>>(uint64_t& value)
 {
-	uint64_t result;
-	uint32_t result32;
+	uint64_t result = 0;
+	uint32_t result32 = 0;
 	*this >> result32;
-	result = (uint64_t)result32 << 32;
+	result = ((uint64_t)result32) << 32ULL;
 	*this >> result32;
-	result |= result32;
+	result |= (uint64_t)result32;
 	value = result;
 	return *this;
 }
