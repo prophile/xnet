@@ -4,6 +4,7 @@
 #XFAIL harness/0002-harness-success-unexpected
 Serialiser:
 TEST serialiser/0000-basic
+XFAIL serialiser/0001-64bit
 Local Only Socket Provider:
 TEST local-socket/0000-send-receive
 Peer:
