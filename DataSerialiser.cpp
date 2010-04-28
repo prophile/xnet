@@ -12,6 +12,8 @@ DataSerialiser::DataSerialiser()
 
 void DataSerialiser::Sync()
 {
+	if (index == 0)
+		return;
 	if (index != 32)
 		currentWord <<= 32 - index;
 	words.push_back(Big32(currentWord));
