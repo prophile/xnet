@@ -36,7 +36,7 @@ std::string DataSerialiser::StringValue() const
 
 DataSerialiser& DataSerialiser::operator<<(uint64_t value)
 {
-	return *this << ((uint32_t)(value >> 32)) << ((uint32_t)value);
+	return *this << ((uint32_t)(value >> 32)) << ((uint32_t)(value));
 }
 
 DataSerialiser& DataSerialiser::operator<<(const std::string& value)
