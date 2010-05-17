@@ -7,7 +7,7 @@ all: libxnet.a
 check: libxnet.a
 	cd test ; ./run-tests
 
-libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Logging.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o System/SocketProvider.o System/LocalOnly.o
+libxnet.a: Peer.o DataSerialiser.o DataUnserialiser.o Message.o Plugin.o Plugins/Sequencing.o Plugins/Reliability.o Plugins/SimulateLag.o Plugins/Logging.o Plugins/Splitting.o Plugins/Ordering.o Plugins/AllowingConnections.o System/SocketProvider.o System/LocalOnly.o System/BSD.o
 	rm -f $@ ; ar -c -q -s $@ $^
 
 Peer.o: Peer.cpp XNet.h DataUnserialiser.h DataSerialiser.h System/SocketProvider.h
@@ -50,6 +50,9 @@ System/SocketProvider.o: System/SocketProvider.cpp System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 System/LocalOnly.o: System/LocalOnly.cpp System/LocalOnly.h System/SocketProvider.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+System/BSD.o: System/BSD.cpp System/BSD.h System/SocketProvider.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 clean:
