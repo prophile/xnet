@@ -29,7 +29,7 @@ private:
 	std::map<ConnectionID, uint32_t> nextExpectedMessage;
 	std::map<ConnectionID, uint32_t> nextOutgoingMessage;
 
-	const static int MAX_QUEUE_SIZE = 20;
+	const static unsigned long MAX_QUEUE_SIZE = 20;
 public:
 	Ordering();
 
