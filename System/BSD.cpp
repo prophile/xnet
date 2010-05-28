@@ -83,7 +83,7 @@ BSDSocketProvider::~BSDSocketProvider()
 Socket* BSDSocketProvider::NewSocket(uint16_t port)
 {
 	int rc;
-	int sock = socket(PF_INET, SOCK_DGRAM, 0);
+	int sock = socket(PF_INET, SOCK_DGRAM, 17);
 	struct sockaddr_in address;
 	memset(&address, 0, sizeof(address));
 	address.sin_port = port;
