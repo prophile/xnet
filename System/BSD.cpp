@@ -33,7 +33,7 @@ void BSDSocket::Send(uint32_t host, uint16_t port, const void* data, size_t leng
 	address.sin_port = port;
 	address.sin_addr.s_addr = host;
 	int rc = sendto(socket, data, length, 0, (const struct sockaddr*)&address, sizeof(address));
-	if (rc == -1 && errno == EAGAIN) // would block, drop the packet
+	if (rc == -1 && (errno == EAGAIN || errno == EINTR)) // would block, drop the packet
 	{
 		return;
 	}
@@ -51,7 +51,7 @@ void* BSDSocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
 	ssize_t rv = recvfrom(socket, packet, MAX_PACKET_SIZE, 0, (struct sockaddr*)&address, &address_length);
 	if (rv < 0)
 	{
-		if (errno != EAGAIN) // EAGAIN is quite expected
+		if (errno != EAGAIN && errno != EINTR) // EAGAIN and EINTR can happen
 		{
 			perror("failed to receive packet");
 		}
