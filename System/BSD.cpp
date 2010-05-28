@@ -7,6 +7,7 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <assert.h>
+#include <errno.h>
 
 namespace XNet
 {
@@ -30,7 +31,8 @@ void BSDSocket::Send(uint32_t host, uint16_t port, const void* data, size_t leng
 	address.sin_family = AF_INET;
 	address.sin_port = port;
 	address.sin_addr.s_addr = host;
-	sendto(socket, data, length, 0, (const struct sockaddr*)&address, sizeof(address));
+	int rc = sendto(socket, data, length, 0, (const struct sockaddr*)&address, sizeof(address));
+	assert((size_t)rc == length);
 }
 
 void* BSDSocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
@@ -39,7 +41,17 @@ void* BSDSocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
 	struct sockaddr_in address;
 	socklen_t address_length = sizeof(address);
 	ssize_t rv = recvfrom(socket, packet, MAX_PACKET_SIZE, 0, (struct sockaddr*)&address, &address_length);
-	if (rv <= 0)
+	if (rv < 0)
+	{
+		if (errno != EAGAIN) // EAGAIN is quite expected
+		{
+			perror("failed to receive packet");
+		}
+		free(packet);
+		length = 0;
+		return NULL;
+	}
+	else if (rv == 0)
 	{
 		free(packet);
 		length = 0;

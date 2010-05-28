@@ -14,11 +14,16 @@ int main()
 	uint32_t receiveHost;
 	uint16_t receivePort;
 	size_t receiveLength;
-	void* receiveData = receiver->Receive(receiveHost, receivePort, receiveLength);
+	void* receiveData = NULL;
+	for (int i = 0; i < 400 && !receiveData; ++i)
+	{
+		receiveData = receiver->Receive(receiveHost, receivePort, receiveLength);
+		usleep(10000);
+	}
 	ASSERT_NOT_NULL(receiveData, "failed to receive message");
-	ASSERT_EQUAL(receivePort, 1025, "got message on wrong port (expected 1025, got " << receivePort << ")");
-	ASSERT_EQUAL(receiveHost, localhost, "got message from wrong host");
 	ASSERT_EQUAL(0, memcmp(receiveData, (const void*)"blah", 4), "got wrong data");
+	ASSERT_EQUAL(receiveHost, localhost, "got message from wrong host");
+	ASSERT_EQUAL(receivePort, 1025, "got message on wrong port (expected 1025, got " << receivePort << ")");
 	free(receiveData);
 	delete receiver;
 	delete sender;
