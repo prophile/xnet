@@ -37,7 +37,7 @@ void BSDSocket::Send(uint32_t host, uint16_t port, const void* data, size_t leng
 
 void* BSDSocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
 {
-	void* packet = malloc(MAX_PACKET_SIZE);
+	char packet[MAX_PACKET_SIZE];
 	struct sockaddr_in address;
 	socklen_t address_length = sizeof(address);
 	ssize_t rv = recvfrom(socket, packet, MAX_PACKET_SIZE, 0, (struct sockaddr*)&address, &address_length);
@@ -47,22 +47,24 @@ void* BSDSocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
 		{
 			perror("failed to receive packet");
 		}
-		free(packet);
 		length = 0;
 		return NULL;
 	}
 	else if (rv == 0)
 	{
-		free(packet);
 		length = 0;
 		return NULL;
 	}
 	else
 	{
+		void* data = malloc(length);
+		memcpy(data, packet, length);
 		length = rv;
 		host = address.sin_addr.s_addr;
+		assert(host);
 		port = address.sin_port;
-		return packet;
+		assert(port);
+		return data;
 	}
 }
 
