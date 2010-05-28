@@ -14,6 +14,24 @@ namespace XNet
 
 #define MAX_PACKET_SIZE 1500
 
+namespace
+{
+
+std::string ReverseHostLookup(uint32_t host)
+{
+	char buf[16];
+	union
+	{
+		char octets[4];
+		uint32_t val;
+	} bitcast;
+	bitcast.val = host;
+	sprintf(buf, "%d.%d.%d.%d", bitcast.octets[0], bitcast.octets[1], bitcast.octets[2], bitcast.octets[3]);
+	return std::string(buf);
+}
+
+}
+
 BSDSocket::BSDSocket(int sock)
 : socket(sock)
 {
@@ -90,7 +108,11 @@ Socket* BSDSocketProvider::NewSocket(uint16_t port)
 	address.sin_port = port;
 	address.sin_family = AF_INET;
 	rc = bind(sock, (const struct sockaddr*)&address, sizeof(address));
-	assert(rc != 0);
+	if (rc != 0)
+	{
+		perror("horrible death cakes");
+		return NULL;
+	}
 	int flags;
 	flags = fcntl(sock, F_GETFL);
 	flags |= O_NONBLOCK;
@@ -116,15 +138,7 @@ uint32_t BSDSocketProvider::ResolveHost(const std::string& hostname)
 
 std::string BSDSocketProvider::ReverseLookup(uint32_t host)
 {
-	char buf[16];
-	union
-	{
-		char octets[4];
-		uint32_t val;
-	} bitcast;
-	bitcast.val = host;
-	sprintf(buf, "%d.%d.%d.%d", bitcast.octets[0], bitcast.octets[1], bitcast.octets[2], bitcast.octets[3]);
-	return std::string(buf);
+	return ReverseHostLookup(host);
 }
 
 }
