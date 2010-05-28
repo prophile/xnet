@@ -86,6 +86,7 @@ Socket* BSDSocketProvider::NewSocket(uint16_t port)
 	int sock = socket(PF_INET, SOCK_DGRAM, 17);
 	struct sockaddr_in address;
 	memset(&address, 0, sizeof(address));
+	address.sin_len = sizeof(address);
 	address.sin_port = port;
 	address.sin_family = AF_INET;
 	rc = bind(sock, (const struct sockaddr*)&address, sizeof(address));
