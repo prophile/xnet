@@ -21,7 +21,7 @@ int main()
 	uint16_t receivePort;
 	size_t receiveLength;
 	void* receiveData = NULL;
-	for (int i = 0; i < 400 && !receiveData; ++i)
+	for (int i = 0; i < 40 && !receiveData; ++i)
 	{
 		receiveData = receiver->Receive(receiveHost, receivePort, receiveLength);
 		usleep(10000);
