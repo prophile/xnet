@@ -28,6 +28,7 @@ void BSDSocket::Send(uint32_t host, uint16_t port, const void* data, size_t leng
 {
 	struct sockaddr_in address;
 	memset(&address, 0, sizeof(address));
+	address.sin_len = sizeof(address);
 	address.sin_family = AF_INET;
 	address.sin_port = port;
 	address.sin_addr.s_addr = host;
