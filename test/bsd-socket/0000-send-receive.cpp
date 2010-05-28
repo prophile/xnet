@@ -3,13 +3,19 @@
 
 using namespace XNet;
 
+#ifdef __LITTLE_ENDIAN__
+#define LOCALHOST 0x0100007F
+#else
+#define LOCALHOST 0x7F000001
+#endif
+
 int main()
 {
 	BSDSocketProvider* provider = new BSDSocketProvider();
 	Socket* sender = provider->NewSocket(1025);
 	Socket* receiver = provider->NewSocket(1026);
 	uint32_t localhost = provider->ResolveHost("localhost");
-	ASSERT_NOT_EQUAL(localhost, 0, "failed to look up localhost");
+	ASSERT_EQUAL(localhost, LOCALHOST, "failed to look up localhost");
 	sender->Send(localhost, 1026, (const void*)"blah", 4);
 	uint32_t receiveHost;
 	uint16_t receivePort;
