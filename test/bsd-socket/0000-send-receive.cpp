@@ -12,11 +12,11 @@ using namespace XNet;
 int main()
 {
 	BSDSocketProvider* provider = new BSDSocketProvider();
-	Socket* sender = provider->NewSocket(1025);
-	Socket* receiver = provider->NewSocket(1026);
+	Socket* sender = provider->NewSocket(htons(1025));
+	Socket* receiver = provider->NewSocket(htons(1026));
 	uint32_t localhost = provider->ResolveHost("localhost");
 	ASSERT_EQUAL(localhost, LOCALHOST, "failed to look up localhost");
-	sender->Send(localhost, 1026, (const void*)"blah", 4);
+	sender->Send(localhost, htons(1026), (const void*)"blah", 4);
 	uint32_t receiveHost;
 	uint16_t receivePort;
 	size_t receiveLength;
@@ -26,10 +26,12 @@ int main()
 		receiveData = receiver->Receive(receiveHost, receivePort, receiveLength);
 		usleep(10000);
 	}
+	char* rd = (char*)receiveData;
 	ASSERT_NOT_NULL(receiveData, "failed to receive message");
-	ASSERT_EQUAL(0, memcmp(receiveData, (const void*)"blah", 4), "got wrong data");
+	ASSERT_EQUAL(0, memcmp(receiveData, (const void*)"blah", 4), "got wrong data: expected 'blah', got '" <<
+	             rd[0] << rd[1] << rd[2] << rd[3] << "'");
 	ASSERT_EQUAL(receiveHost, localhost, "got message from wrong host");
-	ASSERT_EQUAL(receivePort, 1025, "got message on wrong port (expected 1025, got " << receivePort << ")");
+	ASSERT_EQUAL(receivePort, htons(1025), "got message on wrong port (expected 1025, got " << receivePort << ")");
 	free(receiveData);
 	delete receiver;
 	delete sender;
