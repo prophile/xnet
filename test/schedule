@@ -13,3 +13,4 @@ TEST peer/0001-plugin-allow-connections
 TEST peer/0002-connection
 BSD Socket Provider:
 TEST bsd-socket/0000-send-receive
+TEST bsd-socket/0001-sr-self
