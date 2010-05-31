@@ -12,4 +12,4 @@ TEST peer/0000-basic
 TEST peer/0001-plugin-allow-connections
 TEST peer/0002-connection
 BSD Socket Provider:
-XFAIL bsd-socket/0000-send-receive
+TEST bsd-socket/0000-send-receive

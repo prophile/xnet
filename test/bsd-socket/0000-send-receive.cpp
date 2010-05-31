@@ -28,10 +28,11 @@ int main()
 	}
 	char* rd = (char*)receiveData;
 	ASSERT_NOT_NULL(receiveData, "failed to receive message");
+	ASSERT_EQUAL(receiveHost, localhost, "got message from wrong host");
+	ASSERT_EQUAL(receiveLength, 4, "got wrong number of bytes: expected 4, got " << receiveLength);
+	ASSERT_EQUAL(receivePort, htons(1025), "got message on wrong port (expected 1025, got " << receivePort << ")");
 	ASSERT_EQUAL(0, memcmp(receiveData, (const void*)"blah", 4), "got wrong data: expected 'blah', got '" <<
 	             rd[0] << rd[1] << rd[2] << rd[3] << "'");
-	ASSERT_EQUAL(receiveHost, localhost, "got message from wrong host");
-	ASSERT_EQUAL(receivePort, htons(1025), "got message on wrong port (expected 1025, got " << receivePort << ")");
 	free(receiveData);
 	delete receiver;
 	delete sender;

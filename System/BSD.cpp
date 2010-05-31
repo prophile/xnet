@@ -83,6 +83,7 @@ void* BSDSocket::Receive(uint32_t& host, uint16_t& port, size_t& length)
 	}
 	else
 	{
+		length = rv;
 		void* data = malloc(length);
 		memcpy(data, packet, length);
 		length = rv;
